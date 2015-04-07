@@ -85,6 +85,17 @@ body.open {
   display: initial;
 }
 
+.app-bar .logoImg {
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  margin: 32px 16px;
+  padding: 0;
+  float: right;
+  max-width: none;
+  display: initial;
+}
+
 .app-bar .logo a {
   text-decoration: none;
   color: inherit;
