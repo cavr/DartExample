@@ -52,7 +52,7 @@
   <nav class="navdrawer-container promote-layer">
     <h4>Navigation</h4>
     <ul>
-      <li><a href="/">Home</a></li>
+      <li><a href="/">Inicio</a></li>
       <li><a href="/about">Panel de Control</a></li>
     </ul>
   </nav>
@@ -60,41 +60,39 @@
   <!-- contains different views as divs, which the routing system
        displays or hides when the URL changes -->
   <main>
-
-  <div id="home">
-    <div id="home_login">
-      <p>
-        User:<br> <input type="text" id="name"
-          placeholder="Type your name...">
-      </p>
-
-      <p>
-        Password:<br> <input type="password" id="pass"
-          placeholder="Type your password...">
-      </p>
-      <p>
-        <button id="inButton">Entrar</button>
-      </p>
-    </div>
+    <div id="home">
     
-    <div id="home_welcome" style="display: none">
-      <h1>Bienvenido!!! Yump!!</h1>
+      <div id="home_login">
+        <p>
+          User:<br> <input type="text" id="name"
+            placeholder="Type your name...">
+        </p>
+  
+        <p>
+          Password:<br> <input type="password" id="pass"
+            placeholder="Type your password...">
+        </p>
+        <p>
+          <button id="inButton">Entrar</button>
+        </p>
+      </div>
+      
+      <div id="home_welcome" style="display: none">
+        <h1>Bienvenido al backoffice de Yump</h1>
+        <h3>Aquí podrás gestionar tus programas</h3>
+      </div>
+      
     </div>
+  
+    <div id="exito" style="display: none"></div>
+    <div id="fracaso" style="display: none"></div>
     
-  </div>
-
-  <div id="exito" style="display: none"></div>
-  <div id="fracaso" style="display: none"></div>
-  <div id="about" style="display: none">
-
-    <p>
-      <button id="userButton" style="display: none">Buscar
-        Usuarios</button>
-    </p>
-
-    <h1>Respuesta:</h1>
-    <div id="resp"></div>
-  </div>
+    <div id="about" style="display: none">
+      <h3 id="default_about_info">Debes iniciar sesión para acceder a tu panel de control</h3>
+      <p><button id="userButton" style="display: none">Buscar Usuarios</button></p>
+      
+      <div id="resp"></div>
+    </div>
   </main>
 
   <script type="application/dart" src="main.dart"></script>

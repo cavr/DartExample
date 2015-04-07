@@ -28,7 +28,6 @@ void main() {
   var router = new Router();
   router.root
     ..addRoute(name: 'about', path: '/about', enter: showAbout)
-    ..addRoute(name: 'send', path: '/in', enter: showHello)
     ..addRoute(name: 'home', defaultRoute: true, path: '/', enter: showHome);
   router.listen();
 }
@@ -65,6 +64,12 @@ void showButtonsForUser(){
   querySelector('#userButton').style.display = '';
   
 }
+void setUserSession(){
+    querySelector('#home_login').style.display = 'none';
+    querySelector('#home_welcome').style.display = '';
+    querySelector('#default_about_info').style.display = 'none';
+    showButtonsForUser();
+}
 
 void onData(_) {
   if (request.readyState == HttpRequest.DONE && request.status == 200) {
@@ -74,10 +79,8 @@ void onData(_) {
     var bytes = UTF8.encode(parsedMap["apiId"] + ':' + parsedMap["apiSecret"]);
     tokenid = CryptoUtils.bytesToBase64(bytes);
     //var base64= btoa(parsedMap["apiId"] + ':' + parsedMap["apiSecret"]);
-    showButtonsForUser();
     print("T " + tokenid);
-    querySelector('#home_login').style.display = 'none';
-    querySelector('#home_welcome').style.display = '';
+    setUserSession();
   } else if (request.readyState == HttpRequest.DONE && request.status == 0) {
     // Status is 0...most likely the server isn't running.
     serverResponse = 'No server';
