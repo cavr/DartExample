@@ -10,22 +10,63 @@ import 'package:crypto/crypto.dart';
 
 ButtonElement inButton;
 ButtonElement userButton;
+ButtonElement prototypeMission;
+ButtonElement prototypeMail;
+ButtonElement loadUsers;
+ButtonElement deleteUsers;
+ButtonElement clonePrototype;
+ButtonElement inviteUsers;
+ButtonElement welcomeAll;
+ButtonElement company;
 
 var token = "";
 var authUrl = "http://localhost:8080/auth";
 var usersUrl = "http://localhost:8080/admin/user";
+var missionUrl = "http://localhost:8080/prototype/mission/";
+var mailUrl = "http://localhost:8080/prototype/mail/";
+var deleteUsersUrl = "http://localhost:8080/prototype/delete-user/";
+var loadUsersUrl = "http://localhost:8080/prototype/users/";
+var clonePrototypeUrl = "http://localhost:8080/admin/clone-prototype/";
+var inviteUsersUrl = "http://localhost:8080/admin/invite-all";
+var welcomeAllUrl = "http://localhost:8080/admin/welcome-all";
+var companyUrl = "http://localhost:8080/prototype/company/";
 String client;
 String password;
 
 
 void main() {
   initNavMenu();
+  
   inButton = querySelector('#inButton');
   inButton.onClick.listen(login);
 
   userButton = querySelector('#userButton');
   userButton.onClick.listen(getUsers);
-
+  
+  prototypeMission = querySelector('#prototypeMission');
+  prototypeMission.onClick.listen(loadMission);
+    
+  prototypeMail = querySelector('#prototypeMail');
+  prototypeMail.onClick.listen(loadMailTemplate);
+    
+  loadUsers = querySelector('#loadUsers');
+  loadUsers.onClick.listen(uploadUsers);
+    
+  deleteUsers = querySelector('#deleteUsers');
+  deleteUsers.onClick.listen(deleteUsersFromCsv);
+    
+  clonePrototype = querySelector("#clonePrototype");
+  clonePrototype.onClick.listen(clonePrototypeIntoProgram);
+    
+  inviteUsers = querySelector("#inviteUsers");
+  inviteUsers.onClick.listen(inviteUsersBack);
+    
+  welcomeAll = querySelector("#welcomeAll");
+  welcomeAll.onClick.listen(wellComeAllBack);
+  
+  company = querySelector("#companyUpdate");
+  company.onClick.listen(updateCompanyValues);
+             
   // Webapps need routing to listen for changes to the URL.
   var router = new Router();
   router.root
@@ -71,8 +112,21 @@ Function login(Event e) {
  });
 }
 
+
 void showButtonsForUser(){
   querySelector('#userButton').style.display = '';
+  querySelector("#prototypeMail").style.display='';
+  querySelector("#prototypeMission").style.display='';
+  querySelector("#programLoad").style.display='';
+  querySelector("#loadUsers").style.display = '';
+  querySelector("#deleteUsers").style.display = '';
+  querySelector("#clonePrototype").style.display = '';
+  querySelector("#prototypeId").style.display = '';
+  querySelector("#inviteUsers").style.display = '';
+  querySelector("#welcomeAll").style.display = '';
+  querySelector("#inviteId").style.display = '';
+  querySelector("#companyUpdate").style.display = '';
+  querySelector("#companyId").style.display = '';
 }
 
 void setUserSession(){
@@ -82,9 +136,11 @@ void setUserSession(){
     showButtonsForUser();
 }
 
+
 void draw(String name) {
   querySelector('#resp').text = name;
 }
+
 
 void showUsers(Map users){
   var user;
@@ -92,7 +148,6 @@ void showUsers(Map users){
     //querySelector('#resp').text = user;
   }
 }
-
 
 void getUsers(Event e) {
   
@@ -105,6 +160,158 @@ void getUsers(Event e) {
 
      draw(req.response);
 
-   });
+   }).catchError((error){
+    
+    print(error);
+    
+  });
 
+}
+
+void loadMission(Event e){
+  
+  var basic = "Basic " + token;
+  Map header =  {'Authorization': basic};
+  draw("Cargando misiones");
+  HttpRequest.request(missionUrl+querySelector("#programLoad").value, requestHeaders : header).then((HttpRequest req) {
+
+     //Map data = JSON.decode(req.response);
+
+     draw(req.response);
+
+   }).catchError((error){
+    
+    print(error);
+    
+  });     
+  
+}
+
+void loadMailTemplate(Event e){  
+    var basic = "Basic " + token;
+    Map header =  {'Authorization': basic};
+    draw("Cargando Correos");
+    HttpRequest.request(mailUrl+querySelector("#programLoad").value, requestHeaders : header).then((HttpRequest req) {
+
+       //Map data = JSON.decode(req.response);
+
+       draw(req.response);
+
+     }).catchError((error){
+      
+      print(error);
+      
+    });  
+    
+  }
+
+void uploadUsers(Event e){   
+  var basic = "Basic " + token;
+     Map header =  {'Authorization': basic};
+     draw("Cargando Usuarios");
+     HttpRequest.request(loadUsersUrl+querySelector("#programLoad").value, requestHeaders : header).then((HttpRequest req) {
+
+        //Map data = JSON.decode(req.response);
+
+        draw(req.response);
+
+      }).catchError((error){
+       
+       print(error);
+       
+     });  
+     
+}
+
+void deleteUsersFromCsv(Event e){  
+  var basic = "Basic " + token;
+       Map header =  {'Authorization': basic};
+       draw("Borrando Usuarios");
+       HttpRequest.request(deleteUsersUrl+querySelector("#programLoad").value, requestHeaders : header).then((HttpRequest req) {
+
+          //Map data = JSON.decode(req.response);
+
+          draw(req.response);
+
+        }).catchError((error){
+         
+         print(error);
+         
+       }); 
+       
+}       
+       
+void clonePrototypeIntoProgram(Event e){  
+  var basic = "Basic " + token;
+        Map header =  {'Authorization': basic};
+        draw("Clonando Prototipo");
+        HttpRequest.request(clonePrototypeUrl+querySelector("#prototypeId").value, requestHeaders : header).then((HttpRequest req) {
+
+           //Map data = JSON.decode(req.response);
+
+           draw(req.response);
+
+         }).catchError((error){
+          
+          print(error);
+          
+        });
+        
+        
+}
+
+void inviteUsersBack(Event e){
+  
+  var basic = "Basic " + token;  
+  
+  var userList = [querySelector("#inviteId").value];
+  Map data = { 'userList': userList};
+  var request = new HttpRequest();
+  
+  request.onReadyStateChange.listen(( Event e){
+    draw(request.responseText);
+  });
+    
+  request.open('POST',inviteUsersUrl);
+  
+  request.setRequestHeader('Authorization', basic);
+  request.setRequestHeader( 'Content-Type', 'application/json');
+  request.send(JSON.encode(data)); 
+
+}
+
+void wellComeAllBack(Event e){  
+  
+  var basic = "Basic " + token;
+  
+  var userList = [querySelector("#inviteId").value];
+   Map data = { 'userList': userList};
+   var request = new HttpRequest();  
+   
+   request.onReadyStateChange.listen(( Event e){
+     draw(request.responseText);
+   });
+   
+   request.open('POST',welcomeAllUrl);
+   
+   request.setRequestHeader('Authorization', basic);
+   request.setRequestHeader( 'Content-Type', 'application/json');
+   request.send(JSON.encode(data));   
+}
+
+void updateCompanyValues(Event e){  
+  var basic = "Basic " + token;
+        Map header =  {'Authorization': basic};
+        draw(companyUrl+querySelector("#companyId").value);
+        HttpRequest.request(companyUrl+querySelector("#companyId").value, requestHeaders : header).then((HttpRequest req) {
+
+           //Map data = JSON.decode(req.response);
+
+           draw(req.response);
+
+         }).catchError((error){
+          
+          print(error);
+           
+});
 }
